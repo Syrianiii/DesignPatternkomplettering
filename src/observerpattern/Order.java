@@ -7,14 +7,15 @@ import java.util.List;
 
 public class Order {
     private Customer customer;
-    private List<Clothing> clothingList = new ArrayList<>();
+    private List<Clothing> clothingList;
 
     public Order(Customer customer) {
         this.customer = customer;
+        this.clothingList = new ArrayList<>();
     }
 
     public void addClothing(Clothing clothing) {
-        clothingList.add(clothing);
+        this.clothingList.add(clothing);
     }
 
     public List<Clothing> getClothingList() {
@@ -22,14 +23,14 @@ public class Order {
     }
 
     public String getOrderDetails() {
-        StringBuilder builder = new StringBuilder();
-        builder.append("Customer: ").append(customer.getName()).append("\n");
-        builder.append("Address: ").append(customer.getAddress()).append("\n");
-        builder.append("Email: ").append(customer.getEmail()).append("\n");
-        builder.append("Items ordered:\n");
+        StringBuilder details = new StringBuilder();
+        details.append("Customer: ").append(customer.getName()).append("\n")
+                .append("Address: ").append(customer.getAddress()).append("\n")
+                .append("Email: ").append(customer.getEmail()).append("\n")
+                .append("Items ordered:\n");
         for (Clothing clothing : clothingList) {
-            builder.append("- ").append(clothing.getDescription()).append("\n");
+            details.append("- ").append(clothing.getDescription()).append("\n");
         }
-        return builder.toString();
+        return details.toString();
     }
 }

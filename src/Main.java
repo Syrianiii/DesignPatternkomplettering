@@ -1,18 +1,25 @@
-import java.util.Scanner;
-import builderpattern.*;
-import model.*;
+import builderpattern.PantsBuilder;
+import builderpattern.SkirtBuilder;
+import builderpattern.TShirtBuilder;
+import commandpattern.Command;
+import commandpattern.CutCommand;
+import commandpattern.SewCommand;
+import model.Customer;
 import observerpattern.*;
+
+import java.util.Scanner;
+
 
 public class Main {
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
 
         // Läs in kundinformation
-        System.out.println("Enter your name:");
+        System.out.println("ditt namn:");
         String name = scanner.nextLine();
-        System.out.println("Enter your address:");
+        System.out.println("din address:");
         String address = scanner.nextLine();
-        System.out.println("Enter your email:");
+        System.out.println("din email:");
         String email = scanner.nextLine();
 
         // Skapa kundobjekt
@@ -34,7 +41,7 @@ public class Main {
                     System.out.println("Choose Pants attributes:");
                     System.out.println("Enter size (S, M, L):");
                     String sizePants = scanner.nextLine();
-                    System.out.println("Enter material:");
+                    System.out.println("Enter material: Exempel: Bomull");
                     String materialPants = scanner.nextLine();
                     System.out.println("Enter color:");
                     String colorPants = scanner.nextLine();
@@ -44,17 +51,22 @@ public class Main {
                     String lengthPants = scanner.nextLine();
                     System.out.println("Enter price:");
                     double pricePants = Double.parseDouble(scanner.nextLine()); // Read the price
-                    // Använd byggaren för att skapa byggaren
+
                     PantsBuilder pantsBuilder = new PantsBuilder();
-                    // Använd byggaren för att bygga byggnaden steg för steg
                     Clothing pants = pantsBuilder.setSize(sizePants)
                             .setMaterial(materialPants)
                             .setColor(colorPants)
                             .setFit(fitPants)
                             .setLength(lengthPants)
-                            .setPrice(pricePants) // Set the price
+                            .setPrice(pricePants)
                             .build();
                     order.addClothing(pants);
+
+                    Command cutPants = new CutCommand(pants, "Regular Cut");
+                    Command sewPants = new SewCommand(pants, "Regular Sew");
+                    cutPants.execute();
+                    sewPants.execute();
+
                     break;
                 case 2:
                     System.out.println("Choose T-Shirt attributes:");
@@ -68,20 +80,24 @@ public class Main {
                     String sleevesTShirt = scanner.nextLine();
                     System.out.println("Enter neck:");
                     String neckTShirt = scanner.nextLine();
-                    System.out.println("Enter price:"); // Ask for the price
-                    double priceTShirt = Double.parseDouble(scanner.nextLine()); // Read the price
-                    // Använd byggaren för att skapa byggaren
+                    System.out.println("Enter price:");
+                    double priceTShirt = Double.parseDouble(scanner.nextLine());
+
                     TShirtBuilder tShirtBuilder = new TShirtBuilder();
-                    // Använd byggaren för att bygga byggnaden steg för steg
-                    Clothing tShirt = tShirtBuilder
-                            .setSize(sizeTShirt)
+                    Clothing tShirt = tShirtBuilder.setSize(sizeTShirt)
                             .setMaterial(materialTShirt)
                             .setColor(colorTShirt)
                             .setSleeves(sleevesTShirt)
                             .setNeck(neckTShirt)
-                            .setPrice(priceTShirt) // Set the price
+                            .setPrice(priceTShirt)
                             .build();
                     order.addClothing(tShirt);
+
+                    Command cutTShirt = new CutCommand(tShirt, "Regular Cut");
+                    Command sewTShirt = new SewCommand(tShirt, "Regular Sew");
+                    cutTShirt.execute();
+                    sewTShirt.execute();
+
                     break;
                 case 3:
                     System.out.println("Choose Skirt attributes:");
@@ -95,29 +111,33 @@ public class Main {
                     String waistlineSkirt = scanner.nextLine();
                     System.out.println("Enter pattern:");
                     String patternSkirt = scanner.nextLine();
-                    System.out.println("Enter price:"); // Ask for the price
-                    double priceSkirt = Double.parseDouble(scanner.nextLine()); // Read the price
-                    // Använd byggaren för att skapa byggaren
+                    System.out.println("Enter price:");
+                    double priceSkirt = Double.parseDouble(scanner.nextLine());
+
                     SkirtBuilder skirtBuilder = new SkirtBuilder();
-                    // Använd byggaren för att bygga byggnaden steg för steg
                     Clothing skirt = skirtBuilder.setSize(sizeSkirt)
                             .setMaterial(materialSkirt)
                             .setColor(colorSkirt)
                             .setWaistline(waistlineSkirt)
                             .setPattern(patternSkirt)
-                            .setPrice(priceSkirt) // Set the price
+                            .setPrice(priceSkirt)
                             .build();
                     order.addClothing(skirt);
+
+                    Command cutSkirt = new CutCommand(skirt, "Regular Cut");
+                    Command sewSkirt = new SewCommand(skirt, "Regular Sew");
+                    cutSkirt.execute();
+                    sewSkirt.execute();
+
                     break;
                 case 4:
-                    // Fråga om bekräftelse innan kvittot skrivs ut
                     System.out.println("Are you sure you want to place the order? (yes/no)");
                     String confirmation = scanner.nextLine();
                     if (confirmation.equalsIgnoreCase("yes")) {
                         addMoreClothing = false;
                     } else {
                         System.out.println("Order cancelled.");
-                        return; // Avbryt programmet om ordern avbryts
+                        return;
                     }
                     break;
                 default:
@@ -137,6 +157,15 @@ public class Main {
         shop.addObserver(vdObserver);
 
         shop.placeOrder(order);
-        shop.notifyReadyForDelivery(); // Notify when the order is ready for delivery
+
+        // Dekorera klädesplaggen med kommandon
+        for (Clothing clothing : order.getClothingList()) {
+            Command cutCommand = new CutCommand(clothing, "Regular Cut");
+            Command sewCommand = new SewCommand(clothing, "Regular Sew");
+            cutCommand.execute();
+            sewCommand.execute();
+        }
+
+        shop.notifyReadyForDelivery();
     }
 }

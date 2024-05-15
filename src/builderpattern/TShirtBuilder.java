@@ -45,7 +45,7 @@ public class TShirtBuilder {
             @Override
             public String getDescription() {
                 return size + " " + color + " t-shirt made of " + material + ", " +
-                        "sleeves: " + sleeves + ", neck: " + neck;
+                        "sleeves: " + sleeves + ", neck: " + neck + ", price: " + price;
             }
         };
     }

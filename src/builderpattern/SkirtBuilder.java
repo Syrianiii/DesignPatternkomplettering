@@ -45,7 +45,7 @@ public class SkirtBuilder {
             @Override
             public String getDescription() {
                 return size + " " + color + " skirt made of " + material + ", " +
-                        "waistline: " + waistline + ", pattern: " + pattern;
+                        "waistline: " + waistline + ", pattern: " + pattern + ", price: " + price;
             }
         };
     }
